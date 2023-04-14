@@ -5,6 +5,7 @@ const {
   getPatients,
   addpatient,
   updatepatient,
+  getPatientById,
 } = require('../controllers/patientControlers');
 
 const { protect } = require('../middlewares/authmw');
@@ -15,6 +16,12 @@ router.route('/').get(protect, (req, res) => {
   //   return res.json([]);
   // }
   getPatients(req, res);
+});
+router.route('/:id').get(protect, (req, res) => {
+  // if (!req.user) {
+  //   return res.json([]);
+  // }
+  getPatientById(req, res);
 });
 
 router.route('/add').post(protect, (req, res) => {
@@ -27,12 +34,12 @@ router.route('/add').post(protect, (req, res) => {
 });
 
 router.route('/:id').put(protect, (req, res) => {
-  if (!req.user) {
-    res.status(401).json('Not authorized');
-  } else {
+  // if (!req.user) {
+  //   res.status(401).json('Not authorized');
+  // } else {
 
-    updatepatient(req, res);
-  }
+  updatepatient(req, res);
+  // }
 });
 
 module.exports = router;
