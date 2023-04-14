@@ -9,8 +9,7 @@ const getMedicalHistory = asyncHandler(async (req, res) => {
   const patient = await Patient.findById(req.params.patientId);
 
   if (!patient) {
-    res.status(404);
-    throw new Error('Patient not found');
+    res.status(404).json('Patient not found');
   }
 
   const medicalHistory = await MedicalHistory.find({ patient: req.params.patientId }).populate('patient');
@@ -40,8 +39,7 @@ const addMedicalHistory = asyncHandler(async (req, res) => {
   const patient = await Patient.findById(patientId);
 
   if (!patient) {
-    res.status(404);
-    throw new Error('Patient not found');
+    res.status(404).json('Patient not found');
   }
 
   const medicalHistory = await MedicalHistory.create({
@@ -80,20 +78,17 @@ const updateMedicalHistory = asyncHandler(async (req, res) => {
   const medicalHistory = await MedicalHistory.findById(req.params.id);
 
   if (!medicalHistory) {
-    res.status(404);
-    throw new Error('Medical history not found');
+    res.status(404).json('Medical history not found');
   }
 
   const patient = await Patient.findById(medicalHistory.patient);
 
   if (!patient) {
-    res.status(404);
-    throw new Error('Patient not found');
+    res.status(404).json('Patient not found');
   }
 
   if (patient._id.toString() !== req.user.patient) {
-    res.status(401);
-    throw new Error('User not authorized');
+    res.status(401).json('User not authorized');
   }
 
   medicalHistory.dateOfVisit = dateOfVisit;

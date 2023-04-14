@@ -17,8 +17,7 @@ const getPatientById = asyncHandler(async (req, res) => {
   const patient = await Patient.findById(req.params.id)
 
   if (!patient) {
-    res.status(404)
-    throw new Error('Patient not found')
+    res.status(404).json('Patient not found')
   }
 
   res.status(200).json(patient)
@@ -57,7 +56,7 @@ const addpatient = asyncHandler(async (req, res) => {
     })
 
     res.status(200).json(patient)
-  }  catch (error) {
+  } catch (error) {
     if (error.code === 11000 && error.keyValue.email === email) {
       res.status(400).json({ message: 'Patient with this email already exists' })
     } else {
@@ -85,8 +84,7 @@ const updatepatient = asyncHandler(async (req, res) => {
 
   // Make sure the logged in user matches the patient user
   if (patient.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('User not authorized')
+    res.status(401).json('User not authorized')
   }
 
   const {

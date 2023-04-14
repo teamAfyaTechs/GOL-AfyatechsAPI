@@ -11,29 +11,25 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Check if any field is empty
   if (!name || !email || !password || !medical_level || !gender) {
-    res.status(400);
-    throw new Error('All fields are required');
+    res.status(400).json('All fields are required');
   }
 
   // Check if email is valid
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    res.status(400);
-    throw new Error('Invalid email address');
+    res.status(400).json('Invalid email address');
   }
 
   // Check password length
   if (password.length < 8) {
-    res.status(400);
-    throw new Error('Password must be at least 8 characters long');
+    res.status(400).json('Password must be at least 8 characters long');
   }
 
   // Check if user with email already exists
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    res.status(400);
-    throw new Error('User with email already exists');
+    res.status(400).json('User with email already exists');
   }
 
   // Hash password
@@ -59,8 +55,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error('Invalid user data');
+    res.status(400).json('Invalid user data');
   }
 });
 
@@ -74,21 +69,21 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!email || !password) {
     res.status(400);
     throw new Error('Email and password are required');
-  }
-
-  // Check for user email
-  const user = await User.findOne({ email });
-
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-    });
   } else {
-    res.status(400);
-    throw new Error('Invalid credentials');
+
+    // Check for user email
+    const user = await User.findOne({ email });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(400).json("Invalid Creditials");
+    }
   }
 });
 
