@@ -67,8 +67,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Check if any field is empty
   if (!email || !password) {
-    res.status(400);
-    throw new Error('Email and password are required');
+    res.status(400).json('Email and password are required');
   } else {
 
     // Check for user email
@@ -79,7 +78,7 @@ const loginUser = asyncHandler(async (req, res) => {
         _id: user.id,
         name: user.name,
         email: user.email,
-        token: generateToken(user._id),
+        accessToken: generateToken(user._id),
       });
     } else {
       res.status(400).json("Invalid Creditials");
@@ -95,7 +94,7 @@ const getPatient = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  res.cookie('token', '').send();
+  res.cookie('accessToken', '').send();
 });
 
 // Generate JWT

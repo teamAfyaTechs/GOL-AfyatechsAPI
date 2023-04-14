@@ -11,7 +11,7 @@ const {
 const { protect } = require('../middlewares/authmw')
 
 router.post('/register', registerUser)
-router.get('/login', loginUser)
+router.post('/login', loginUser)
 router.get('/get', protect, getPatient)
 router.post('/logout', logout)
 
