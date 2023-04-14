@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use(cookieParser());
-app.use(cors)
+// app.use(cors)
 
 app.use('/api/patients', require('./routes/patientRoute'));
 app.use('/api/users', require('./routes/userRoute'));

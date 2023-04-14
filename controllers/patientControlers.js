@@ -1,32 +1,69 @@
 const asyncHandler = require('express-async-handler')
-
 const Patient = require('../models/patientModel')
 const User = require('../models/userModel')
 
-// @desc    get patients
+// @desc    get all patients
 // @route   GET /api/patients
 // @access  Private
-const getpatient = asyncHandler(async (req, res) => {
-  const patients = await Patient.find({ user: req.user.id })
-
+const getPatients = asyncHandler(async (req, res) => {
+  const patients = await Patient.find({})
   res.status(200).json(patients)
 })
 
-// @desc    Set patients
+// @desc    get a single patient
+// @route   GET /api/patients/:id
+// @access  Private
+const getPatientById = asyncHandler(async (req, res) => {
+  const patient = await Patient.findById(req.params.id)
+
+  if (!patient) {
+    res.status(404)
+    throw new Error('Patient not found')
+  }
+
+  res.status(200).json(patient)
+})
+
+// @desc    add patients
 // @route   POST /api/patients
 // @access  Private
 const addpatient = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
-    res.status(400)
-    throw new Error('Please add a text field')
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    emergencyContactName,
+    emergencyContactPhone,
+    bloodType,
+    insuranceProvider,
+    insurancePolicyNumber,
+  } = req.body
+
+  try {
+    const patient = await Patient.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      emergencyContactName,
+      emergencyContactPhone,
+      bloodType,
+      insuranceProvider,
+      insurancePolicyNumber,
+      user: req.user.id,
+    })
+
+    res.status(200).json(patient)
+  }  catch (error) {
+    if (error.code === 11000 && error.keyValue.email === email) {
+      res.status(400).json({ message: 'Patient with this email already exists' })
+    } else {
+      throw error
+    }
   }
-
-  const patient = await Patient.create({
-    text: req.body.text,
-    user: req.user.id,
-  })
-
-  res.status(200).json(patient)
 })
 
 // @desc    Update patients
@@ -37,7 +74,7 @@ const updatepatient = asyncHandler(async (req, res) => {
 
   if (!patient) {
     res.status(400)
-    throw new Error('patient not found')
+    throw new Error('Patient not found')
   }
 
   // Check for user
@@ -46,23 +83,48 @@ const updatepatient = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 
-  // Make sure the logged in user matches the goal user
+  // Make sure the logged in user matches the patient user
   if (patient.user.toString() !== req.user.id) {
     res.status(401)
     throw new Error('User not authorized')
   }
 
-  const updatedpatient = await Patient.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  })
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    emergencyContactName,
+    emergencyContactPhone,
+    bloodType,
+    insuranceProvider,
+    insurancePolicyNumber,
+  } = req.body
+
+  const updatedpatient = await Patient.findByIdAndUpdate(
+    req.params.id,
+    {
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      emergencyContactName,
+      emergencyContactPhone,
+      bloodType,
+      insuranceProvider,
+      insurancePolicyNumber,
+    },
+    { new: true }
+  )
 
   res.status(200).json(updatedpatient)
 })
 
-
 module.exports = {
-  getpatient,
+  getPatients,
+  getPatientById,
   addpatient,
   updatepatient,
-
 }

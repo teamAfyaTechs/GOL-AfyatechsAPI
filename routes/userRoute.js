@@ -3,18 +3,18 @@ const router = express.Router()
 
 
 const {
-    registerUser,
-    logout,
-    loginUser,
-    getPatient,
-  } = require('../controllers/userControler')
-  const { protect } = require('../middlewares/authmw')
+  registerUser,
+  logout,
+  loginUser,
+  getPatient,
+} = require('../controllers/userControler')
+const { protect } = require('../middlewares/authmw')
 
-  router.post('/register', registerUser)
-  router.get('/login', loginUser)
-  router.get('/get', protect, getPatient)
-  router.post('/logout' , logout)
-  
+router.post('/register', registerUser)
+router.get('/login', loginUser)
+router.get('/get', protect, getPatient)
+router.post('/logout', logout)
+
 
 module.exports = router
 

@@ -4,7 +4,7 @@ const medicalHistorySchema = mongoose.Schema({
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient',
-    required: true,
+    required: true
   },
   dateOfVisit: {
     type: Date,
@@ -38,6 +38,12 @@ const medicalHistorySchema = mongoose.Schema({
     type: String,
     required: [true, 'Please add family medical history'],
   },
+
+});
+
+// Set a default value for patient field
+medicalHistorySchema.path('patient').default(function () {
+  return this._id;
 });
 
 module.exports = mongoose.model('MedicalHistory', medicalHistorySchema);
