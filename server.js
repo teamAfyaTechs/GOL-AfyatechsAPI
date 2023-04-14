@@ -22,7 +22,7 @@ app.use('/api/users', require('./routes/userRoute'));
 app.use('/api/medicalhistory', require('./routes/medicalHistoryRoutes'))
 
 app.use('/', function (req, res) {
-  res.status(200).send(`Welcome to login , sign-up api`);
+  res.status(200).send(`Welcome to Api`);
 });
 
 // Connect to database
