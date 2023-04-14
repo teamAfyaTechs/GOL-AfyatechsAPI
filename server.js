@@ -6,7 +6,7 @@ const bodyparser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const connectDB = require("./config/db")
 const dotenv = require('dotenv').config();
-const cors = require('cors')
+const cors = require('cors');
 
 const port = process.env.PORT || 3000;
 
