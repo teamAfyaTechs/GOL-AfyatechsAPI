@@ -27,41 +27,12 @@ const getPatientById = asyncHandler(async (req, res) => {
 // @route   POST /api/patients
 // @access  Private
 const addpatient = asyncHandler(async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    address,
-    emergencyContactName,
-    emergencyContactPhone,
-    bloodType,
-    insuranceProvider,
-    insurancePolicyNumber,
-  } = req.body
-
+  const newPatient = new Patient(req.body);
   try {
-    const patient = await Patient.create({
-      firstName,
-      lastName,
-      email,
-      phone,
-      address,
-      emergencyContactName,
-      emergencyContactPhone,
-      bloodType,
-      insuranceProvider,
-      insurancePolicyNumber,
-      user: req.user.id,
-    })
-
+    const patient = await newPatient.save()
     res.status(200).json(patient)
   } catch (error) {
-    if (error.code === 11000 && error.keyValue.email === email) {
-      res.status(400).json({ message: 'Patient with this email already exists' })
-    } else {
-      throw error
-    }
+    res.status(500).json(error);
   }
 })
 
