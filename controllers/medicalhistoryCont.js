@@ -84,8 +84,15 @@ const updateMedicalHistory = asyncHandler(async (req, res) => {
   });
 });
 
+// Controller function to get the total number of hospital visits
+const getTotalHospitalVisits = asyncHandler(async (req, res) => {
+  const totalVisits = await MedicalHistory.countDocuments({ type: 'hospital' });
+  res.json({ totalVisits });
+});
+
 module.exports = {
   getMedicalHistory,
   addMedicalHistory,
   updateMedicalHistory,
+  getTotalHospitalVisits
 };
