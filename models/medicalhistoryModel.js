@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const medicalHistorySchema = mongoose.Schema({
-  patientId: {
+  facialID: {
     type: String,
     required: true
   },

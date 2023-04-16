@@ -6,14 +6,14 @@ const Patient = require('../models/patientModel');
 // @route   GET /api/medical-history/:patientId
 // @access  Private (Medical Practioner only)
 const getMedicalHistory = asyncHandler(async (req, res) => {
-  const patient = await Patient.findById({ _id: req.params.id });
+  const patient = await Patient.findOne({ facialID: req.params.id })
 
   if (!patient) {
     res.status(404).json('Patient not found');
   } else {
 
 
-    const medicalHistory = await MedicalHistory.find({ patientId: req.params.id })
+    const medicalHistory = await MedicalHistory.find({ facialID: req.params.id })
 
     res.status(200).json(medicalHistory);
   }
@@ -25,7 +25,7 @@ const getMedicalHistory = asyncHandler(async (req, res) => {
 const addMedicalHistory = asyncHandler(async (req, res) => {
   const newMedicalHistory = new MedicalHistory(req.body);
 
-  const patient = await Patient.findById({ _id: req.body.patientId });
+  const patient = await Patient.findOne({ facialID: req.body.facialID })
 
   if (!patient) {
     res.status(404).json('Patient not found');

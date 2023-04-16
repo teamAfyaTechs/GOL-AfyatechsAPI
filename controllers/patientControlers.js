@@ -14,7 +14,7 @@ const getPatients = asyncHandler(async (req, res) => {
 // @route   GET /api/patients/:id
 // @access  Private
 const getPatientById = asyncHandler(async (req, res) => {
-  const patient = await Patient.findById(req.params.id)
+  const patient = await Patient.findOne({ facialID: req.params.id })
 
   if (!patient) {
     res.status(404).json('Patient not found')
