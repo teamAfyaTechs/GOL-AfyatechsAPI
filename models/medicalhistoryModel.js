@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const medicalHistorySchema = mongoose.Schema({
-  patient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
+  patientId: {
+    type: String,
     required: true
   },
   dateOfVisit: {
@@ -41,9 +40,5 @@ const medicalHistorySchema = mongoose.Schema({
 
 });
 
-// Set a default value for patient field
-medicalHistorySchema.path('patient').default(function () {
-  return this._id;
-});
 
 module.exports = mongoose.model('MedicalHistory', medicalHistorySchema);

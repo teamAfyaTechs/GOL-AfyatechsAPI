@@ -15,13 +15,17 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a password'],
     },
-   medical_level: {
+    medical_level: {
       type: String,
       required: [true, 'Please add your Medical Level'],
     },
     gender: {
       type: String,
       required: [true, 'Kindly enter your gender'],
+    },
+    phone: {
+      type: Number,
+      required: [true, 'Kindly enter your Phone'],
     },
 
   },

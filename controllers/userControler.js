@@ -7,55 +7,19 @@ const User = require('../models/userModel');
 // @route   POST /api/users/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, medical_level, gender } = req.body;
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      res.status(404).send("Email Exit!")
+    }
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
+    const newUser = new User({ ...req.body, password: hash });
 
-  // Check if any field is empty
-  if (!name || !email || !password || !medical_level || !gender) {
-    res.status(400).json('All fields are required');
-  }
+    await newUser.save();
+    res.status(200).json("User has been created!");
+  } catch (err) {
 
-  // Check if email is valid
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    res.status(400).json('Invalid email address');
-  }
-
-  // Check password length
-  if (password.length < 8) {
-    res.status(400).json('Password must be at least 8 characters long');
-  }
-
-  // Check if user with email already exists
-  const existingUser = await User.findOne({ email });
-
-  if (existingUser) {
-    res.status(400).json('User with email already exists');
-  }
-
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  // Create user
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    medical_level,
-    gender,
-  });
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      medical_level: user.medical_level,
-      gender: user.gender,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400).json('Invalid user data');
   }
 });
 
@@ -78,6 +42,9 @@ const loginUser = asyncHandler(async (req, res) => {
         _id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
+        medical_level: user.medical_level,
+        gender: user.gender,
         accessToken: generateToken(user._id),
       });
     } else {

@@ -8,56 +8,41 @@ const Patient = require('../models/patientModel');
 const getMedicalHistory = asyncHandler(async (req, res) => {
   const patient = await Patient.findById(req.params.patientId);
 
-  if (!patient) {
-    res.status(404).json('Patient not found');
-  }
+  // if (!patient) {
+  //   res.status(404).json('Patient not found');
+  // }
 
-  const medicalHistory = await MedicalHistory.find({ patient: req.params.patientId }).populate('patient');
+  const medicalHistory = await MedicalHistory.find({ patient: req.params.patientId })
 
-  res.status(200).json({
-    patientName: patient.name,
-    medicalHistory,
-  });
+  res.status(200).json(medicalHistory);
 });
 
 // @desc    Add a medical history for a patient
 // @route   POST /api/medical-history
 // @access  Private (Medical Practioner only)
 const addMedicalHistory = asyncHandler(async (req, res) => {
-  const {
-    patientId,
-    dateOfVisit,
-    reasonForVisit,
-    diagnosis,
-    treatmentPlan,
-    medicationsPrescribed,
-    allergies,
-    chronicConditions,
-    familyMedicalHistory,
-  } = req.body;
+  // const {
+  //   patientId,
+  //   dateOfVisit,
+  //   reasonForVisit,
+  //   diagnosis,
+  //   treatmentPlan,
+  //   medicationsPrescribed,
+  //   allergies,
+  //   chronicConditions,
+  //   familyMedicalHistory,
+  // } = req.body;
+  const newMedicalHistory = new MedicalHistory(req.body);
 
-  const patient = await Patient.findById(patientId);
+  const patient = await Patient.findById({ _id: req.body.patientId });
 
   if (!patient) {
     res.status(404).json('Patient not found');
   }
 
-  const medicalHistory = await MedicalHistory.create({
-    patient: patientId,
-    dateOfVisit,
-    reasonForVisit,
-    diagnosis,
-    treatmentPlan,
-    medicationsPrescribed,
-    allergies,
-    chronicConditions,
-    familyMedicalHistory,
-  });
+  const medicalHistory = await newMedicalHistory.save();
 
-  res.status(201).json({
-    patientName: patient.name,
-    medicalHistory,
-  });
+  res.status(201).json(medicalHistory);
 });
 
 // @desc    Update a medical history for a patient
