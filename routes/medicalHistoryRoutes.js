@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {  addMedicalHistory, updateMedicalHistory, getMedicalHistory } = require('../controllers/medicalhistoryCont');
+const { addMedicalHistory, updateMedicalHistory, getMedicalHistory } = require('../controllers/medicalhistoryCont');
 const { protect } = require('../middlewares/authmw');
 
 // GET all medical histories for a specific patient
-router.get('/:id', protect, getMedicalHistory);
+router.get('/:id', getMedicalHistory);
 
 // POST a medical history for the registered patient
 router.post('/add', protect, addMedicalHistory);
